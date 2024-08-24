@@ -69,13 +69,27 @@ const scene = new THREE.Scene()
 
 // scene.add(mesh)
 
-const group = new THREE.Group()
-scene.add(group)
-const cube1 = new THREE.BoxGeometry(1,1,1)
-const material = new THREE.MeshBasicMaterial({color: "red"})
-const mesh1 = new THREE.Mesh(cube1,material)
+// const group = new THREE.Group()
+// scene.add(group)
+// const cube1 = new THREE.BoxGeometry(1,1,1)
+// const material = new THREE.MeshBasicMaterial({color: "red"})
+// const mesh1 = new THREE.Mesh(cube1,material)
 
-group.add(mesh1)
+const geometry = new THREE.BufferGeometry()
+
+const count = 50
+const positionsArray = new Float32Array(count* 3*3)
+
+for(let i=0;i<count *3*3 ;i++){
+  positionsArray[i]=(Math.random() -0.5)
+}
+
+const positionAttribute =new THREE.BufferAttribute(positionsArray,3)
+geometry.setAttribute('position',positionAttribute)
+const material = new THREE.MeshBasicMaterial({color: "red"})
+const mesh = new THREE.Mesh(geometry,material)
+scene.add(mesh)
+//group.add(mesh1)
 // const cube2 = new THREE.BoxGeometry(1,1,1)
 // const material1 = new THREE.MeshBasicMaterial({color: "green"})
 // const mesh2 = new THREE.Mesh(cube2,material1)
@@ -106,6 +120,16 @@ window.addEventListener('mousemove',(e)=>{
   cursor.x=e.clientX/sizes.width -0.5,
   cursor.y= -(e.clientY/sizes.height -0.5)
 })
+
+window.addEventListener('dblclick',()=>{
+  if(!document.fullscreenElement){
+    canvas.requestFullscreen()
+  }
+  else{
+    document.exitFullscreen()
+  }
+})
+
 
 //set size 
 window.addEventListener('resize',()=>{
@@ -142,7 +166,7 @@ const renderer =new THREE.WebGLRenderer({
 const axesHelper = new THREE.AxesHelper( 5 )
 scene.add(axesHelper)
 renderer.setSize(sizes.width,sizes.height)
-
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 
 const clock =new THREE.Clock()
 
