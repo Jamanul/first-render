@@ -1,5 +1,6 @@
 // import * as THREE from 'three';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import gsap from "gsap";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const canvas=document.querySelector('canvas.threeJs') 
 // //scene
 // const scene = new THREE.Scene()
@@ -75,29 +76,29 @@ const material = new THREE.MeshBasicMaterial({color: "red"})
 const mesh1 = new THREE.Mesh(cube1,material)
 
 group.add(mesh1)
-const cube2 = new THREE.BoxGeometry(1,1,1)
-const material1 = new THREE.MeshBasicMaterial({color: "green"})
-const mesh2 = new THREE.Mesh(cube2,material1)
-mesh2.position.x=2
-group.add(mesh2)
-const cube3 = new THREE.BoxGeometry(1,1,1)
-const material2 = new THREE.MeshBasicMaterial({color: "blue"})
-const mesh3 = new THREE.Mesh(cube3,material2)
-mesh3.position.x=-2
-group.add(mesh3)
+// const cube2 = new THREE.BoxGeometry(1,1,1)
+// const material1 = new THREE.MeshBasicMaterial({color: "green"})
+// const mesh2 = new THREE.Mesh(cube2,material1)
+// mesh2.position.x=2
+// group.add(mesh2)
+// const cube3 = new THREE.BoxGeometry(1,1,1)
+// const material2 = new THREE.MeshBasicMaterial({color: "blue"})
+// const mesh3 = new THREE.Mesh(cube3,material2)
+// mesh3.position.x=-2
+// group.add(mesh3)
 
-group.position.y= 1
+//group.position.y= 1
 
-
+//console.log(window)
 
 
 const sizes={
-    height: '800',
-    width: '600'
+    height: window.innerHeight,
+    width: window.innerWidth
   }
 
 //camera
-const camera =new THREE.PerspectiveCamera(75,sizes.width/sizes.height,0.1,30)
+const camera =new THREE.PerspectiveCamera(75,sizes.width/sizes.height,0.1,3)
 camera.position.z=3
 scene.add(camera)
 
@@ -114,16 +115,24 @@ scene.add(axesHelper)
 renderer.setSize(sizes.width,sizes.height)
 
 
+const clock =new THREE.Clock()
+
 // initialize the orbit-control
 const controls =new OrbitControls(camera,canvas)
-controls.autoRotate=true
-controls.enableDamping=true
+gsap.to(mesh1.position,{delay:2,duration:5,x:3})
+// controls.autoRotate=true
+// controls.enableDamping=true
 const renderLoop=()=>{
   //console.log('a')
+  // const elapsedTime = clock.getElapsedTime()
+  // camera.position.y= Math.sin(elapsedTime)
+  // camera.position.x= Math.cos(elapsedTime)
+  // camera.lookAt(mesh1.position)
+
   controls.update()
   renderer.render(scene,camera)
   window.requestAnimationFrame(renderLoop)
 }
 renderLoop()
 
-renderer.render(scene,camera)
+//renderer.render(scene,camera)
