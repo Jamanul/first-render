@@ -97,8 +97,21 @@ const sizes={
     width: window.innerWidth
   }
 
+//cursor
+const cursor={
+  x:0,
+  y:0
+}
+window.addEventListener('mousemove',(e)=>{
+  cursor.x=e.clientX/sizes.width -0.5,
+  cursor.y= -(e.clientY/sizes.height -0.5)
+})
+
 //camera
-const camera =new THREE.PerspectiveCamera(75,sizes.width/sizes.height,0.1,3)
+const aspectRatio = sizes.width/sizes.height
+const camera =new THREE.PerspectiveCamera(75,sizes.width/sizes.height,0.1,100)
+//we are multiplying aspectRatio to fix the stressing as orthographic camera renders as screen sizes
+//const camera = new THREE.OrthographicCamera(-1*aspectRatio,1*aspectRatio,1,-1,0.1,100)
 camera.position.z=3
 scene.add(camera)
 
@@ -119,17 +132,24 @@ const clock =new THREE.Clock()
 
 // initialize the orbit-control
 const controls =new OrbitControls(camera,canvas)
-gsap.to(mesh1.position,{delay:2,duration:5,x:3})
+
+//gsap.to(mesh1.position,{delay:2,duration:5,x:3})
 // controls.autoRotate=true
 // controls.enableDamping=true
 const renderLoop=()=>{
   //console.log('a')
-  // const elapsedTime = clock.getElapsedTime()
+   const elapsedTime = clock.getElapsedTime()
+   mesh1.rotation.y = elapsedTime
+
+   camera.position.x= Math.sin(cursor.x * Math.PI *2 )*2
+   camera.position.z= Math.cos(cursor.x * Math.PI *2 )*2
+   camera.position.y= cursor.y*3 
+   camera.lookAt(mesh1.position)
   // camera.position.y= Math.sin(elapsedTime)
   // camera.position.x= Math.cos(elapsedTime)
   // camera.lookAt(mesh1.position)
 
-  controls.update()
+  //controls.update()
   renderer.render(scene,camera)
   window.requestAnimationFrame(renderLoop)
 }
