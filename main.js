@@ -107,6 +107,22 @@ window.addEventListener('mousemove',(e)=>{
   cursor.y= -(e.clientY/sizes.height -0.5)
 })
 
+//set size 
+window.addEventListener('resize',()=>{
+  //update sizes
+  sizes.width=window.innerWidth
+  sizes.height=window.innerHeight
+  //update camera
+  camera.aspect = sizes.width/sizes.height
+  camera.updateProjectionMatrix()
+  //update renderer
+  renderer.setSize(sizes.width,sizes.height)
+})
+
+
+
+
+
 //camera
 const aspectRatio = sizes.width/sizes.height
 const camera =new THREE.PerspectiveCamera(75,sizes.width/sizes.height,0.1,100)
@@ -134,22 +150,22 @@ const clock =new THREE.Clock()
 const controls =new OrbitControls(camera,canvas)
 
 //gsap.to(mesh1.position,{delay:2,duration:5,x:3})
-// controls.autoRotate=true
-// controls.enableDamping=true
+controls.autoRotate=true
+ controls.enableDamping=true
 const renderLoop=()=>{
-  //console.log('a')
-   const elapsedTime = clock.getElapsedTime()
-   mesh1.rotation.y = elapsedTime
+  // //console.log('a')
+  //  const elapsedTime = clock.getElapsedTime()
+  //  mesh1.rotation.y = elapsedTime
 
-   camera.position.x= Math.sin(cursor.x * Math.PI *2 )*2
-   camera.position.z= Math.cos(cursor.x * Math.PI *2 )*2
-   camera.position.y= cursor.y*3 
-   camera.lookAt(mesh1.position)
+  //  camera.position.x= Math.sin(cursor.x * Math.PI *2 )*2
+  //  camera.position.z= Math.cos(cursor.x * Math.PI *2 )*2
+  //  camera.position.y= cursor.y*3 
+  //  camera.lookAt(mesh1.position)
   // camera.position.y= Math.sin(elapsedTime)
   // camera.position.x= Math.cos(elapsedTime)
   // camera.lookAt(mesh1.position)
 
-  //controls.update()
+  controls.update()
   renderer.render(scene,camera)
   window.requestAnimationFrame(renderLoop)
 }
