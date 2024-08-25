@@ -1,7 +1,11 @@
-// import * as THREE from 'three';
+import * as THREE from 'three';
 import gsap from "gsap";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const canvas=document.querySelector('canvas.threeJs') 
+import GUI from 'lil-gui'; 
+
+const gui = new GUI();
+const debugObject ={}
 // //scene
 // const scene = new THREE.Scene()
 // //object
@@ -43,7 +47,7 @@ const canvas=document.querySelector('canvas.threeJs')
 // renderer.render(scene,camera)
 
 
-import * as THREE from "three"
+
 
 const scene = new THREE.Scene()
 
@@ -65,29 +69,29 @@ const scene = new THREE.Scene()
 // mesh.rotation.x=Math.PI *0.25
 // mesh.rotation.y=Math.PI *0.25
 
-
+debugObject.color = '#332ba1'
 
 // scene.add(mesh)
 
 // const group = new THREE.Group()
 // scene.add(group)
-// const cube1 = new THREE.BoxGeometry(1,1,1)
-// const material = new THREE.MeshBasicMaterial({color: "red"})
-// const mesh1 = new THREE.Mesh(cube1,material)
+const cube1 = new THREE.BoxGeometry(1,1,1)
+const material = new THREE.MeshBasicMaterial({color: debugObject.color,wireframe:true})
+const mesh = new THREE.Mesh(cube1,material)
 
-const geometry = new THREE.BufferGeometry()
+// const geometry = new THREE.BufferGeometry()
 
-const count = 50
-const positionsArray = new Float32Array(count* 3*3)
+// const count = 50
+// const positionsArray = new Float32Array(count* 3*3)
 
-for(let i=0;i<count *3*3 ;i++){
-  positionsArray[i]=(Math.random() -0.5)
-}
+// for(let i=0;i<count *3*3 ;i++){
+//   positionsArray[i]=(Math.random() -0.5)
+// }
 
-const positionAttribute =new THREE.BufferAttribute(positionsArray,3)
-geometry.setAttribute('position',positionAttribute)
-const material = new THREE.MeshBasicMaterial({color: "red"})
-const mesh = new THREE.Mesh(geometry,material)
+// const positionAttribute =new THREE.BufferAttribute(positionsArray,3)
+// geometry.setAttribute('position',positionAttribute)
+//const material = new THREE.MeshBasicMaterial({color: "red"})
+//const mesh = new THREE.Mesh(geometry,material)
 scene.add(mesh)
 //group.add(mesh1)
 // const cube2 = new THREE.BoxGeometry(1,1,1)
@@ -105,7 +109,21 @@ scene.add(mesh)
 
 //console.log(window)
 
+gui.add(mesh.position,'y').min(-3).max(3).step(0.01).name('elevation')
+gui.add(mesh,'visible')
+gui.addColor(debugObject,'color').onChange((value)=>{
+  //console.log(value)
+  material.color.set(debugObject.color)
+})
+debugObject.spin= ()=>{
+  gsap.to(mesh.rotation,{y:mesh.rotation.y +Math.PI *2})
+}
+gui.add(debugObject,'spin')
+debugObject.subDivision=2
+gui.add(debugObject,'subDivision').min(1).max(20).step(1).onFinishChange(()=>{
 
+  mesh.geometry =new THREE.BoxGeometry(1,1,1,debugObject.subDivision,debugObject.subDivision,debugObject.subDivision)
+}) 
 const sizes={
     height: window.innerHeight,
     width: window.innerWidth
